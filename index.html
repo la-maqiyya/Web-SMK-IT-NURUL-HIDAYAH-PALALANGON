@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMK IT NURUL HIDAYAH PALALANGON</title>
+
+  <!-- ===== Google Fonts ===== -->
+  <!-- Amiri: Elegan, berkarakter Islami untuk judul -->
+  <!-- Plus Jakarta Sans: Modern, bersih untuk teks body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- ===== Font Awesome (Icons) ===== -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <!-- ===== AOS (Animate On Scroll) Library ===== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+  <!-- ===== Custom Stylesheet ===== -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       OVERLAY UNTUK MODAL (Login & Kontak)
+       ============================================================ -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ============================================================
+       MODAL LOGIN
+       ============================================================ -->
+  <div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal__header">
+      <div class="modal__icon"><i class="fa-solid fa-mosque"></i></div>
+      <h2 class="modal__title" id="loginTitle">Masuk ke Portal</h2>
+      <p class="modal__subtitle">Silakan login untuk mengakses portal sekolah</p>
+    </div>
+    <button class="modal__close" id="loginClose" aria-label="Tutup modal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <form class="modal__form" id="loginForm" novalidate>
+      <!-- Field Email -->
+      <div class="form-group">
+        <label class="form-group__label" for="loginEmail">
+          <i class="fa-solid fa-envelope"></i> Alamat Email
+        </label>
+        <input
+          class="form-group__input"
+          type="email"
+          id="loginEmail"
+          placeholder="contoh@nurulhidayah.sch.id"
+          autocomplete="email"
+        />
+        <span class="form-group__error" id="loginEmailError"></span>
+      </div>
+      <!-- Field Password -->
+      <div class="form-group">
+        <label class="form-group__label" for="loginPassword">
+          <i class="fa-solid fa-lock"></i> Kata Sandi
+        </label>
+        <div class="form-group__password-wrap">
+          <input
+            class="form-group__input"
+            type="password"
+            id="loginPassword"
+            placeholder="Masukkan kata sandi"
+            autocomplete="current-password"
+          />
+          <!-- Tombol tampilkan/sembunyikan password -->
+          <button type="button" class="form-group__eye" id="togglePassword" aria-label="Tampilkan password">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+        <span class="form-group__error" id="loginPasswordError"></span>
+      </div>
+      <!-- Pesan sukses/gagal login -->
+      <div class="form-group__alert" id="loginAlert"></div>
+      <!-- Tombol Submit -->
+      <button type="submit" class="btn btn--primary btn--full">
+        <i class="fa-solid fa-right-to-bracket"></i> Masuk
+      </button>
+      <p class="modal__hint">
+        Demo: email <strong>admin@nurulhidayah.sch.id</strong>, password <strong>admin123</strong>
+      </p>
+    </form>
+  </div>
+
+  <!-- ============================================================
+       MODAL KONTAK / KIRIM PESAN
+       ============================================================ -->
+  <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="modal__header">
+      <div class="modal__icon"><i class="fa-solid fa-paper-plane"></i></div>
+      <h2 class="modal__title" id="contactTitle">Hubungi Admin</h2>
+      <p class="modal__subtitle">Kami siap membantu pertanyaan Anda</p>
+    </div>
+    <button class="modal__close" id="contactClose" aria-label="Tutup modal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <form class="modal__form" id="contactForm" novalidate>
+      <!-- Nama -->
+      <div class="form-group">
+        <label class="form-group__label" for="contactName">
+          <i class="fa-solid fa-user"></i> Nama Lengkap
+        </label>
+        <input
+          class="form-group__input"
+          type="text"
+          id="contactName"
+          placeholder="Nama Anda"
+          autocomplete="name"
+        />
+        <span class="form-group__error" id="contactNameError"></span>
+      </div>
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-group__label" for="contactEmail">
+          <i class="fa-solid fa-envelope"></i> Alamat Email
+        </label>
+        <input
+          class="form-group__input"
+          type="email"
+          id="contactEmail"
+          placeholder="email@contoh.com"
+          autocomplete="email"
+        />
+        <span class="form-group__error" id="contactEmailError"></span>
+      </div>
+      <!-- Subjek -->
+      <div class="form-group">
+        <label class="form-group__label" for="contactSubject">
+          <i class="fa-solid fa-tag"></i> Subjek
+        </label>
+        <input
+          class="form-group__input"
+          type="text"
+          id="contactSubject"
+          placeholder="Topik pesan Anda"
+        />
+        <span class="form-group__error" id="contactSubjectError"></span>
+      </div>
+      <!-- Pesan -->
+      <div class="form-group">
+        <label class="form-group__label" for="contactMessage">
+          <i class="fa-solid fa-comment-dots"></i> Pesan
+        </label>
+        <textarea
+          class="form-group__input form-group__textarea"
+          id="contactMessage"
+          placeholder="Tulis pesan Anda di sini..."
+          rows="4"
+        ></textarea>
+        <span class="form-group__error" id="contactMessageError"></span>
+      </div>
+      <!-- Alert sukses -->
+      <div class="form-group__alert" id="contactAlert"></div>
+      <button type="submit" class="btn btn--primary btn--full">
+        <i class="fa-solid fa-paper-plane"></i> Kirim Pesan
+      </button>
+    </form>
+  </div>
+
+  <!-- ============================================================
+       NAVBAR / HEADER
+       ============================================================ -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <!-- Logo & Nama Sekolah -->
+      <a href="#hero" class="navbar__brand">
+        <div class="navbar__logo">
+          <i class="fa-solid fa-mosque"></i>
+        </div>
+        <div class="navbar__brand-text">
+          <span class="navbar__brand-name">SMK IT</span>
+          <span class="navbar__brand-tagline">Nurul Hidayah</span>
+        </div>
+      </a>
+
+      <!-- Menu Navigasi Desktop -->
+      <nav class="navbar__nav" id="navMenu" aria-label="Menu utama">
+        <ul class="navbar__list">
+          <li><a href="#hero"      class="navbar__link">Beranda</a></li>
+          <li><a href="#profil"    class="navbar__link">Profil</a></li>
+          <li><a href="#jurusan"   class="navbar__link">Jurusan</a></li>
+          <li><a href="#fasilitas" class="navbar__link">Fasilitas</a></li>
+          <li><a href="#galeri"    class="navbar__link">Galeri</a></li>
+          <li><a href="#kontak"    class="navbar__link">Kontak</a></li>
+        </ul>
+      </nav>
+
+      <!-- Tombol Aksi (Login, Dark Mode, Hamburger) -->
+      <div class="navbar__actions">
+        <!-- Tombol Kirim Pesan -->
+        <button class="btn btn--outline btn--sm" id="openContactNavBtn" aria-label="Hubungi Admin">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Kontak</span>
+        </button>
+        <!-- Tombol Login -->
+        <button class="btn btn--primary btn--sm" id="openLoginBtn" aria-label="Login">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span>Login</span>
+        </button>
+        <!-- Toggle Dark / Light Mode -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+        <!-- Hamburger Menu (Mobile) -->
+        <button class="navbar__hamburger" id="hamburger" aria-label="Buka menu" aria-expanded="false">
+          <span class="hamburger__bar"></span>
+          <span class="hamburger__bar"></span>
+          <span class="hamburger__bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <section class="hero" id="hero">
+    <!-- Ornamen geometris Islami sebagai dekorasi latar -->
+    <div class="hero__ornament hero__ornament--tl"></div>
+    <div class="hero__ornament hero__ornament--br"></div>
+
+    <div class="container hero__content">
+      <!-- Bismillah Arab -->
+      <p class="hero__bismillah" data-aos="fade-down" data-aos-delay="100">
+        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+      </p>
+      <!-- Tag label -->
+      <div class="hero__badge" data-aos="fade-up" data-aos-delay="200">
+        <i class="fa-solid fa-star-and-crescent"></i>
+        Sekolah Menengah Kejuruan Islam Terpadu
+      </div>
+      <!-- Judul Utama -->
+      <h1 class="hero__title" data-aos="fade-up" data-aos-delay="300">
+        SMK IT <span class="hero__title--accent">Nurul Hidayah</span>
+        <br />Palalangon
+      </h1>
+      <!-- Sub-teks sambutan -->
+      <p class="hero__subtitle" data-aos="fade-up" data-aos-delay="400">
+        Mencetak generasi Muslim yang <em>berilmu, berakhlak mulia,</em> dan
+        <em>siap bersaing</em> di era global. Berlandaskan iman dan ketaqwaan kepada Allah SWT.
+      </p>
+      <!-- Hadits / Quote Islami -->
+      <div class="hero__quote" data-aos="fade-up" data-aos-delay="500">
+        <i class="fa-solid fa-quote-left"></i>
+        <p>"Tuntutlah ilmu, sesungguhnya menuntut ilmu adalah pendekatan diri kepada Allah."</p>
+        <span>— HR. Ad-Dailami</span>
+      </div>
+      <!-- Tombol Aksi -->
+      <div class="hero__cta" data-aos="fade-up" data-aos-delay="600">
+        <a href="#profil" class="btn btn--primary btn--lg">
+          <i class="fa-solid fa-book-open"></i> Pelajari Lebih Lanjut
+        </a>
+        <button class="btn btn--outline-light btn--lg" id="heroContactBtn">
+          <i class="fa-solid fa-paper-plane"></i> Hubungi Kami
+        </button>
+      </div>
+      <!-- Statistik Singkat -->
+      <div class="hero__stats" data-aos="fade-up" data-aos-delay="700">
+        <div class="hero__stat">
+          <span class="hero__stat-number" data-target="500">0</span>
+          <span class="hero__stat-label">Siswa Aktif</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-number" data-target="40">0</span>
+          <span class="hero__stat-label">Tenaga Pendidik</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-number" data-target="5">0</span>
+          <span class="hero__stat-label">Program Keahlian</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-number" data-target="15">0</span>
+          <span class="hero__stat-label">Tahun Berdiri</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero__scroll-indicator">
+      <span>Scroll</span>
+      <i class="fa-solid fa-angles-down"></i>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROFIL SINGKAT
+       ============================================================ -->
+  <section class="section profil" id="profil">
+    <!-- Pola geometris Islami di latar -->
+    <div class="islamic-pattern"></div>
+
+    <div class="container">
+      <!-- Judul Section -->
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-header__label">
+          <i class="fa-solid fa-star-and-crescent"></i> Tentang Kami
+        </span>
+        <h2 class="section-header__title">Profil Sekolah</h2>
+        <p class="section-header__desc">
+          Mengenal lebih dekat SMK IT Nurul Hidayah Palalangon
+        </p>
+      </div>
+
+      <div class="profil__grid">
+        <!-- Foto Profil Sekolah -->
+        <div class="profil__image-wrap" data-aos="fade-right" data-aos-delay="100">
+          <div class="profil__image-frame">
+            <!-- 
+              FOTO SEKOLAH #1 — Ganti URL di bawah dengan foto gedung/depan sekolah Anda.
+              Ukuran ideal: 800x600px atau rasio 4:3
+            -->
+            <img
+              src="https://picsum.photos/seed/school-building/800/600"
+              alt="Gedung SMK IT Nurul Hidayah Palalangon"
+              class="profil__image"
+              loading="lazy"
+            />
+            <!-- Badge di atas foto -->
+            <div class="profil__image-badge">
+              <i class="fa-solid fa-award"></i>
+              <span>Terakreditasi A</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informasi Profil -->
+        <div class="profil__info" data-aos="fade-left" data-aos-delay="200">
+          <h3 class="profil__info-title">SMK IT Nurul Hidayah Palalangon</h3>
+          <p class="profil__info-desc">
+            SMK IT Nurul Hidayah Palalangon adalah sekolah menengah kejuruan Islam terpadu yang
+            berkomitmen untuk membentuk generasi muda yang berilmu, beriman, dan berakhlak mulia.
+            Berdiri sejak tahun 2009, kami telah mencetak ratusan lulusan yang berprestasi di
+            berbagai bidang, baik di tingkat lokal, nasional, maupun internasional.
+          </p>
+          <p class="profil__info-desc">
+            Dengan kurikulum yang memadukan pendidikan kejuruan modern dan nilai-nilai Islam,
+            kami memastikan setiap siswa tidak hanya unggul secara akademik, tetapi juga
+            memiliki karakter yang kuat sebagai bekal menghadapi tantangan zaman.
+          </p>
+
+          <!-- Info Detail Sekolah -->
+          <ul class="profil__detail-list">
+            <li class="profil__detail-item">
+              <div class="profil__detail-icon"><i class="fa-solid fa-map-pin"></i></div>
+              <div>
+                <strong>Alamat</strong>
+                <span>Palalangon, Kab. Cianjur, Jawa Barat</span>
+              </div>
+            </li>
+            <li class="profil__detail-item">
+              <div class="profil__detail-icon"><i class="fa-solid fa-calendar-days"></i></div>
+              <div>
+                <strong>Tahun Berdiri</strong>
+                <span>2009</span>
+              </div>
+            </li>
+            <li class="profil__detail-item">
+              <div class="profil__detail-icon"><i class="fa-solid fa-certificate"></i></div>
+              <div>
+                <strong>Akreditasi</strong>
+                <span>A (Unggul)</span>
+              </div>
+            </li>
+            <li class="profil__detail-item">
+              <div class="profil__detail-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div>
+                <strong>Naungan</strong>
+                <span>Kementerian Pendidikan & Pesantren Nurul Hidayah</span>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Visi & Misi -->
+          <div class="profil__visi-misi">
+            <div class="profil__visi">
+              <h4><i class="fa-solid fa-eye"></i> Visi</h4>
+              <p>
+                Menjadi sekolah kejuruan Islam terpadu yang unggul, menghasilkan lulusan yang
+                kompeten, berkarakter islami, dan mampu bersaing di era globalisasi.
+              </p>
+            </div>
+            <div class="profil__misi">
+              <h4><i class="fa-solid fa-bullseye"></i> Misi</h4>
+              <ul>
+                <li>Menyelenggarakan pendidikan kejuruan berbasis nilai-nilai Islam</li>
+                <li>Mengembangkan kompetensi siswa sesuai kebutuhan industri</li>
+                <li>Membentuk karakter akhlakul karimah pada seluruh civitas sekolah</li>
+                <li>Menjalin kerjasama dengan dunia usaha dan industri</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       DAFTAR JURUSAN
+       ============================================================ -->
+  <section class="section jurusan" id="jurusan">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-header__label">
+          <i class="fa-solid fa-star-and-crescent"></i> Program Keahlian
+        </span>
+        <h2 class="section-header__title">Daftar Jurusan</h2>
+        <p class="section-header__desc">
+          5 program keahlian unggulan yang dirancang untuk menyiapkan lulusan siap kerja
+        </p>
+      </div>
+
+      <div class="jurusan__grid">
+
+        <!-- Jurusan 1: RPL -->
+        <div class="jurusan__card" data-aos="fade-up" data-aos-delay="100">
+          <div class="jurusan__card-icon" style="--card-color: #1a6b3c;">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <h3 class="jurusan__card-title">Rekayasa Perangkat Lunak</h3>
+          <p class="jurusan__card-abbr">RPL</p>
+          <p class="jurusan__card-desc">
+            Mempelajari pemrograman, pengembangan aplikasi web & mobile, serta rekayasa sistem
+            perangkat lunak berbasis teknologi terkini.
+          </p>
+          <ul class="jurusan__card-skills">
+            <li><i class="fa-brands fa-python"></i> Python</li>
+            <li><i class="fa-brands fa-js"></i> JavaScript</li>
+            <li><i class="fa-brands fa-android"></i> Android Dev</li>
+            <li><i class="fa-solid fa-database"></i> Database</li>
+          </ul>
+          <div class="jurusan__card-footer">
+            <span><i class="fa-solid fa-users"></i> 120 Siswa</span>
+            <span class="jurusan__card-badge">Unggulan</span>
+          </div>
+        </div>
+
+        <!-- Jurusan 2: TKJ -->
+        <div class="jurusan__card" data-aos="fade-up" data-aos-delay="200">
+          <div class="jurusan__card-icon" style="--card-color: #0d5c8b;">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <h3 class="jurusan__card-title">Teknik Komputer & Jaringan</h3>
+          <p class="jurusan__card-abbr">TKJ</p>
+          <p class="jurusan__card-desc">
+            Menguasai instalasi jaringan komputer, konfigurasi server, keamanan siber, serta
+            pemeliharaan infrastruktur teknologi informasi.
+          </p>
+          <ul class="jurusan__card-skills">
+            <li><i class="fa-solid fa-wifi"></i> Networking</li>
+            <li><i class="fa-solid fa-server"></i> Server</li>
+            <li><i class="fa-solid fa-shield-halved"></i> Cybersecurity</li>
+            <li><i class="fa-brands fa-linux"></i> Linux</li>
+          </ul>
+          <div class="jurusan__card-footer">
+            <span><i class="fa-solid fa-users"></i> 100 Siswa</span>
+            <span class="jurusan__card-badge">Populer</span>
+          </div>
+        </div>
+
+        <!-- Jurusan 3: AKL -->
+        <div class="jurusan__card" data-aos="fade-up" data-aos-delay="300">
+          <div class="jurusan__card-icon" style="--card-color: #7d4e00;">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h3 class="jurusan__card-title">Akuntansi & Keuangan Lembaga</h3>
+          <p class="jurusan__card-abbr">AKL</p>
+          <p class="jurusan__card-desc">
+            Mempelajari pembukuan, laporan keuangan, perpajakan, dan pengelolaan keuangan
+            sesuai standar nasional dan prinsip ekonomi syariah.
+          </p>
+          <ul class="jurusan__card-skills">
+            <li><i class="fa-solid fa-receipt"></i> Akuntansi</li>
+            <li><i class="fa-solid fa-coins"></i> Keuangan Syariah</li>
+            <li><i class="fa-solid fa-file-invoice"></i> Perpajakan</li>
+            <li><i class="fa-solid fa-chart-line"></i> Analisis</li>
+          </ul>
+          <div class="jurusan__card-footer">
+            <span><i class="fa-solid fa-users"></i> 90 Siswa</span>
+            <span class="jurusan__card-badge">Syariah</span>
+          </div>
+        </div>
+
+        <!-- Jurusan 4: OTKP -->
+        <div class="jurusan__card" data-aos="fade-up" data-aos-delay="400">
+          <div class="jurusan__card-icon" style="--card-color: #5c1a6e;">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <h3 class="jurusan__card-title">Otomatisasi Tata Kelola Perkantoran</h3>
+          <p class="jurusan__card-abbr">OTKP</p>
+          <p class="jurusan__card-desc">
+            Mempersiapkan tenaga profesional di bidang administrasi, manajemen perkantoran,
+            korespondensi, dan layanan pelanggan modern.
+          </p>
+          <ul class="jurusan__card-skills">
+            <li><i class="fa-solid fa-file-word"></i> Office Suite</li>
+            <li><i class="fa-solid fa-headset"></i> Customer Service</li>
+            <li><i class="fa-solid fa-pen-clip"></i> Korespondensi</li>
+            <li><i class="fa-solid fa-diagram-project"></i> Manajemen</li>
+          </ul>
+          <div class="jurusan__card-footer">
+            <span><i class="fa-solid fa-users"></i> 80 Siswa</span>
+          </div>
+        </div>
+
+        <!-- Jurusan 5: PM (Pemasaran) -->
+        <div class="jurusan__card" data-aos="fade-up" data-aos-delay="500">
+          <div class="jurusan__card-icon" style="--card-color: #8b1a1a;">
+            <i class="fa-solid fa-store"></i>
+          </div>
+          <h3 class="jurusan__card-title">Bisnis Daring & Pemasaran</h3>
+          <p class="jurusan__card-abbr">BDP</p>
+          <p class="jurusan__card-desc">
+            Mempelajari strategi pemasaran digital, e-commerce, manajemen toko online, dan
+            kewirausahaan berbasis ekonomi kreatif Islami.
+          </p>
+          <ul class="jurusan__card-skills">
+            <li><i class="fa-solid fa-cart-shopping"></i> E-Commerce</li>
+            <li><i class="fa-brands fa-instagram"></i> Digital Marketing</li>
+            <li><i class="fa-solid fa-lightbulb"></i> Kewirausahaan</li>
+            <li><i class="fa-solid fa-chart-bar"></i> Analitik</li>
+          </ul>
+          <div class="jurusan__card-footer">
+            <span><i class="fa-solid fa-users"></i> 110 Siswa</span>
+            <span class="jurusan__card-badge">Baru</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FASILITAS
+       ============================================================ -->
+  <section class="section fasilitas" id="fasilitas">
+    <div class="islamic-pattern"></div>
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-header__label">
+          <i class="fa-solid fa-star-and-crescent"></i> Sarana & Prasarana
+        </span>
+        <h2 class="section-header__title">Fasilitas Kami</h2>
+        <p class="section-header__desc">
+          Fasilitas lengkap dan modern untuk mendukung proses belajar mengajar yang optimal
+        </p>
+      </div>
+
+      <!-- Grid Fasilitas -->
+      <div class="fasilitas__grid">
+
+        <!-- Fasilitas 1 -->
+        <div class="fasilitas__item" data-aos="zoom-in" data-aos-delay="100">
+          <!-- 
+            FOTO FASILITAS — Ganti URL setiap foto dengan foto fasilitas sekolah Anda.
+          -->
+          <div class="fasilitas__item-img-wrap">
+            <img src="https://picsum.photos/seed/lab-komputer/600/400" alt="Laboratorium Komputer" loading="lazy" />
+            <div class="fasilitas__item-overlay">
+              <i class="fa-solid fa-computer"></i>
+            </div>
+          </div>
+          <div class="fasilitas__item-body">
+            <h3><i class="fa-solid fa-desktop"></i> Lab. Komputer</h3>
+            <p>3 laboratorium komputer berspecifikasi tinggi dengan koneksi internet cepat, dilengkapi AC dan LCD proyektor.</p>
+          </div>
+        </div>
+
+        <!-- Fasilitas 2 -->
+        <div class="fasilitas__item" data-aos="zoom-in" data-aos-delay="200">
+          <div class="fasilitas__item-img-wrap">
+            <img src="https://picsum.photos/seed/masjid-sekolah/600/400" alt="Masjid Sekolah" loading="lazy" />
+            <div class="fasilitas__item-overlay">
+              <i class="fa-solid fa-mosque"></i>
+            </div>
+          </div>
+          <div class="fasilitas__item-body">
+            <h3><i class="fa-solid fa-mosque"></i> Masjid</h3>
+            <p>Masjid sekolah yang representatif, mampu menampung seluruh civitas sekolah untuk sholat berjamaah dan kegiatan keagamaan.</p>
+          </div>
+        </div>
+
+        <!-- Fasilitas 3 -->
+        <div class="fasilitas__item" data-aos="zoom-in" data-aos-delay="300">
+          <div class="fasilitas__item-img-wrap">
+            <img src="https://picsum.photos/seed/perpustakaan/600/400" alt="Perpustakaan" loading="lazy" />
+            <div class="fasilitas__item-overlay">
+              <i class="fa-solid fa-book"></i>
+            </div>
+          </div>
+          <div class="fasilitas__item-body">
+            <h3><i class="fa-solid fa-book-open"></i> Perpustakaan</h3>
+            <p>Perpustakaan modern dengan koleksi ribuan buku pelajaran, buku Islam, dan referensi digital yang bisa diakses kapan saja.</p>
+          </div>
+        </div>
+
+        <!-- Fasilitas 4 -->
+        <div class="fasilitas__item" data-aos="zoom-in" data-aos-delay="400">
+          <div class="fasilitas__item-img-wrap">
+            <img src="https://picsum.photos/seed/lapangan-olahraga/600/400" alt="Lapangan Olahraga" loading="lazy" />
+            <div class="fasilitas__item-overlay">
+              <i class="fa-solid fa-futbol"></i>
+            </div>
+          </div>
+          <div class="fasilitas__item-body">
+            <h3><i class="fa-solid fa-person-running"></i> Lapangan Olahraga</h3>
+            <p>Lapangan serbaguna untuk basket, voli, dan futsal. Dilengkapi tribun penonton dan fasilitas sanitasi memadai.</p>
+          </div>
+        </div>
+
+        <!-- Fasilitas 5 -->
+        <div class="fasilitas__item" data-aos="zoom-in" data-aos-delay="500">
+          <div class="fasilitas__item-img-wrap">
+            <img src="https://picsum.photos/seed/asrama/600/400" alt="Asrama Siswa" loading="lazy" />
+            <div class="fasilitas__item-overlay">
+              <i class="fa-solid fa-house"></i>
+            </div>
+          </div>
+          <div class="fasilitas__item-body">
+            <h3><i class="fa-solid fa-bed"></i> Asrama Pesantren</h3>
+            <p>Asrama putra dan putri yang nyaman, bersih, dan terjaga, dengan pembinaan akhlak 24 jam oleh musyrif/musyrifah.</p>
+          </div>
+        </div>
+
+        <!-- Fasilitas 6 -->
+        <div class="fasilitas__item" data-aos="zoom-in" data-aos-delay="600">
+          <div class="fasilitas__item-img-wrap">
+            <img src="https://picsum.photos/seed/aula-sekolah/600/400" alt="Aula Serbaguna" loading="lazy" />
+            <div class="fasilitas__item-overlay">
+              <i class="fa-solid fa-people-group"></i>
+            </div>
+          </div>
+          <div class="fasilitas__item-body">
+            <h3><i class="fa-solid fa-people-roof"></i> Aula Serbaguna</h3>
+            <p>Aula berkapasitas 500 orang untuk kegiatan seminar, wisuda, pertemuan wali murid, dan acara keagamaan besar.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALERI FOTO
+       ============================================================ -->
+  <section class="section galeri" id="galeri">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-header__label">
+          <i class="fa-solid fa-star-and-crescent"></i> Dokumentasi
+        </span>
+        <h2 class="section-header__title">Galeri Foto</h2>
+        <p class="section-header__desc">
+          Abadikan momen berharga di SMK IT Nurul Hidayah Palalangon
+        </p>
+      </div>
+
+      <!-- Filter Galeri -->
+      <div class="galeri__filter" data-aos="fade-up" data-aos-delay="100">
+        <button class="galeri__filter-btn active" data-filter="all">Semua</button>
+        <button class="galeri__filter-btn" data-filter="kegiatan">Kegiatan</button>
+        <button class="galeri__filter-btn" data-filter="prestasi">Prestasi</button>
+        <button class="galeri__filter-btn" data-filter="lingkungan">Lingkungan</button>
+      </div>
+
+      <!-- Grid Galeri -->
+      <!-- 
+        CARA MENGGANTI FOTO:
+        1. Ganti URL src="..." dengan path/URL foto sekolah Anda.
+        2. Untuk foto lokal: src="foto/nama-foto.jpg"
+        3. Untuk foto online: src="https://link-foto-anda.com/foto.jpg"
+        4. Ubah alt="..." menjadi deskripsi foto yang sesuai.
+        5. Ubah data-category sesuai kategori: "kegiatan", "prestasi", atau "lingkungan"
+      -->
+      <div class="galeri__grid" id="galeriGrid">
+
+        <div class="galeri__item" data-category="kegiatan" data-aos="fade-up" data-aos-delay="100">
+          <img src="https://picsum.photos/seed/upacara/600/450" alt="Upacara Bendera" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Upacara Bendera</p>
+            <span>Kegiatan</span>
+          </div>
+        </div>
+
+        <div class="galeri__item galeri__item--tall" data-category="lingkungan" data-aos="fade-up" data-aos-delay="150">
+          <img src="https://picsum.photos/seed/gedung-sekolah/600/700" alt="Gedung Sekolah" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Gedung Utama</p>
+            <span>Lingkungan</span>
+          </div>
+        </div>
+
+        <div class="galeri__item" data-category="prestasi" data-aos="fade-up" data-aos-delay="200">
+          <img src="https://picsum.photos/seed/lomba-juara/600/450" alt="Juara Lomba" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Juara Olimpiade Sains</p>
+            <span>Prestasi</span>
+          </div>
+        </div>
+
+        <div class="galeri__item" data-category="kegiatan" data-aos="fade-up" data-aos-delay="250">
+          <img src="https://picsum.photos/seed/praktik-siswa/600/450" alt="Praktik Siswa" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Praktik Lab. Komputer</p>
+            <span>Kegiatan</span>
+          </div>
+        </div>
+
+        <div class="galeri__item" data-category="kegiatan" data-aos="fade-up" data-aos-delay="300">
+          <img src="https://picsum.photos/seed/pesantren-kilat/600/450" alt="Pesantren Kilat" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Pesantren Kilat Ramadan</p>
+            <span>Kegiatan</span>
+          </div>
+        </div>
+
+        <div class="galeri__item galeri__item--wide" data-category="prestasi" data-aos="fade-up" data-aos-delay="350">
+          <img src="https://picsum.photos/seed/wisuda-smk/900/450" alt="Wisuda Siswa" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Wisuda Angkatan 2024</p>
+            <span>Prestasi</span>
+          </div>
+        </div>
+
+        <div class="galeri__item" data-category="lingkungan" data-aos="fade-up" data-aos-delay="400">
+          <img src="https://picsum.photos/seed/taman-sekolah/600/450" alt="Taman Sekolah" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Taman Sekolah</p>
+            <span>Lingkungan</span>
+          </div>
+        </div>
+
+        <div class="galeri__item" data-category="prestasi" data-aos="fade-up" data-aos-delay="450">
+          <img src="https://picsum.photos/seed/piala-sekolah/600/450" alt="Koleksi Piala" loading="lazy" />
+          <div class="galeri__item-overlay">
+            <p>Koleksi Piala</p>
+            <span>Prestasi</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION KONTAK
+       ============================================================ -->
+  <section class="section kontak" id="kontak">
+    <div class="islamic-pattern"></div>
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-header__label">
+          <i class="fa-solid fa-star-and-crescent"></i> Hubungi Kami
+        </span>
+        <h2 class="section-header__title">Kontak & Lokasi</h2>
+        <p class="section-header__desc">
+          Kami senang mendengar dari Anda. Jangan ragu untuk menghubungi kami.
+        </p>
+      </div>
+
+      <div class="kontak__grid">
+        <!-- Info Kontak -->
+        <div class="kontak__info" data-aos="fade-right" data-aos-delay="100">
+          <div class="kontak__info-card">
+            <div class="kontak__info-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <h4>Alamat Sekolah</h4>
+              <p>Jl. Nurul Hidayah No. 1, Palalangon, Kab. Cianjur, Jawa Barat 43261</p>
+            </div>
+          </div>
+          <div class="kontak__info-card">
+            <div class="kontak__info-icon"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <h4>Telepon</h4>
+              <p>(0263) 123-4567</p>
+            </div>
+          </div>
+          <div class="kontak__info-card">
+            <div class="kontak__info-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <h4>Email</h4>
+              <p>info@nurulhidayah.sch.id</p>
+            </div>
+          </div>
+          <div class="kontak__info-card">
+            <div class="kontak__info-icon"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <h4>Jam Layanan</h4>
+              <p>Senin – Sabtu: 07.00 – 16.00 WIB</p>
+            </div>
+          </div>
+
+          <!-- Tombol buka modal kontak -->
+          <button class="btn btn--primary btn--full" id="openContactSectionBtn">
+            <i class="fa-solid fa-paper-plane"></i> Kirim Pesan ke Admin
+          </button>
+        </div>
+
+        <!-- Peta / Map Embed -->
+        <div class="kontak__map-wrap" data-aos="fade-left" data-aos-delay="200">
+          <!-- 
+            GANTI SRC DENGAN URL EMBED GOOGLE MAPS LOKASI SEKOLAH ANDA:
+            1. Buka maps.google.com
+            2. Cari lokasi sekolah Anda
+            3. Klik "Bagikan" > "Sematkan peta" > Salin iframe src
+          -->
+          <div class="kontak__map-placeholder">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <p>Peta Lokasi Sekolah</p>
+            <span>Palalangon, Kab. Cianjur, Jawa Barat</span>
+            <a
+              href="https://maps.google.com/?q=Palalangon+Cianjur+Jawa+Barat"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn--outline btn--sm"
+            >
+              <i class="fa-solid fa-map"></i> Buka di Google Maps
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer" id="footer">
+    <!-- Ornamen atas footer -->
+    <div class="footer__ornament"></div>
+
+    <div class="container">
+      <div class="footer__grid">
+
+        <!-- Kolom 1: Brand & Deskripsi -->
+        <div class="footer__col footer__col--brand">
+          <div class="footer__logo">
+            <i class="fa-solid fa-mosque"></i>
+            <div>
+              <span class="footer__logo-name">SMK IT Nurul Hidayah</span>
+              <span class="footer__logo-tag">Palalangon</span>
+            </div>
+          </div>
+          <p class="footer__desc">
+            Membentuk generasi Muslim yang unggul, berakhlak mulia, dan siap menghadapi
+            tantangan zaman berlandaskan Al-Qur'an dan As-Sunnah.
+          </p>
+          <!-- Media Sosial -->
+          <div class="footer__socials">
+            <a href="#" class="footer__social" aria-label="Facebook" rel="noopener">
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="#" class="footer__social" aria-label="Instagram" rel="noopener">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="#" class="footer__social" aria-label="YouTube" rel="noopener">
+              <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="#" class="footer__social" aria-label="WhatsApp" rel="noopener">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="#" class="footer__social" aria-label="TikTok" rel="noopener">
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Kolom 2: Link Cepat -->
+        <div class="footer__col">
+          <h4 class="footer__col-title">Navigasi</h4>
+          <ul class="footer__links">
+            <li><a href="#hero"><i class="fa-solid fa-chevron-right"></i> Beranda</a></li>
+            <li><a href="#profil"><i class="fa-solid fa-chevron-right"></i> Profil Sekolah</a></li>
+            <li><a href="#jurusan"><i class="fa-solid fa-chevron-right"></i> Daftar Jurusan</a></li>
+            <li><a href="#fasilitas"><i class="fa-solid fa-chevron-right"></i> Fasilitas</a></li>
+            <li><a href="#galeri"><i class="fa-solid fa-chevron-right"></i> Galeri</a></li>
+            <li><a href="#kontak"><i class="fa-solid fa-chevron-right"></i> Kontak</a></li>
+          </ul>
+        </div>
+
+        <!-- Kolom 3: Jurusan -->
+        <div class="footer__col">
+          <h4 class="footer__col-title">Program Keahlian</h4>
+          <ul class="footer__links">
+            <li><a href="#jurusan"><i class="fa-solid fa-chevron-right"></i> Rekayasa Perangkat Lunak</a></li>
+            <li><a href="#jurusan"><i class="fa-solid fa-chevron-right"></i> Teknik Komputer & Jaringan</a></li>
+            <li><a href="#jurusan"><i class="fa-solid fa-chevron-right"></i> Akuntansi & Keuangan</a></li>
+            <li><a href="#jurusan"><i class="fa-solid fa-chevron-right"></i> Otomatisasi Perkantoran</a></li>
+            <li><a href="#jurusan"><i class="fa-solid fa-chevron-right"></i> Bisnis Daring & Pemasaran</a></li>
+          </ul>
+        </div>
+
+        <!-- Kolom 4: Kontak -->
+        <div class="footer__col">
+          <h4 class="footer__col-title">Kontak</h4>
+          <address class="footer__address">
+            <p><i class="fa-solid fa-map-pin"></i> Palalangon, Kab. Cianjur, Jawa Barat 43261</p>
+            <p><i class="fa-solid fa-phone"></i> (0263) 123-4567</p>
+            <p><i class="fa-solid fa-envelope"></i> info@nurulhidayah.sch.id</p>
+            <p><i class="fa-solid fa-globe"></i> www.nurulhidayah.sch.id</p>
+          </address>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer__bottom">
+        <p>
+          &copy; <span id="year"></span> SMK IT Nurul Hidayah Palalangon. Hak Cipta Dilindungi.
+        </p>
+        <p class="footer__bottom-ayat">
+          "وَقُل رَّبِّ زِدْنِى عِلْمًۭا" &mdash; QS. Thaha: 114
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       TOMBOL BACK TO TOP
+       ============================================================ -->
+  <button class="back-to-top" id="backToTop" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-angles-up"></i>
+  </button>
+
+  <!-- ===== AOS Library JS ===== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+  <!-- ===== Custom JavaScript ===== -->
+  <script src="script.js"></script>
+</body>
+</html>
